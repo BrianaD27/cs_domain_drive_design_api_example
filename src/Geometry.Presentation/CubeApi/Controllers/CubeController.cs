@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Geometry.Presentation.CubeApi.Controllers;
 
+
 /// <summary>
 /// Controller for managing cube operations via REST API.
 /// Provides endpoints for creating and retrieving cube entities.
