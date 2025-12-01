@@ -1,4 +1,5 @@
 using Geometry.Domain.CylinderInterface;
+using Geometry.Domain.CylinderModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace Geometry.Infrastructure.Persistence.EFCore;
@@ -12,65 +13,120 @@ public class CylinderRepository : ICylinderRepository
     private readonly GeometryDbContext _context;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CubeRepository"/> class.
+    /// Initializes a new instance of the <see cref="CylinderRepository"/> class.
     /// </summary>
     /// <param name="context">The database context to use for persistence operations.</param>
     /// <exception cref="ArgumentNullException">Thrown when context is null.</exception>
-    public CubeRepository(GeometryDbContext context)
+    public CylinderRepository(GeometryDbContext context)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     /// <summary>
-    /// Retrieves a Cube by its unique identifier.
+    /// Retrieves a Cylinder by its unique identifier.
     /// </summary>
-    /// <param name="id">The unique identifier of the Cube to retrieve.</param>
+    /// <param name="id">The unique identifier of the Cylinder to retrieve.</param>
     /// <returns>
     /// A task that represents the asynchronous operation.
-    /// The task result contains the cube with the specified identifier, or null if not found.
+    /// The task result contains the Cylinder with the specified identifier, or null if not found.
     /// </returns>
-    public async Task<Cube?> ReadById(Guid id)
+    public async Task<Cylinder?> ReadById(Guid id)
     {
-        var cubeDBO = await _context.Cubes
+        var cylinderDBO = await _context.Cylinders
             .FirstOrDefaultAsync(c => c.Id == id);
 
-        return cubeDBO == null ? null : CubeMapper.ToDomain(cubeDBO);
+        return cylinderDBO == null ? null : CylinderMapper.ToDomain(cylinderDBO);
     }
 
     /// <summary>
-    /// Saves or updates a Cube entity in the repository.
+    /// Creates a Cylinder entity in the repository.
     /// </summary>
-    /// <param name="cube">The Cube entity to save or update.</param>
+    /// <param name="cylinder">The Cylinder entity to create.</param>
     /// <returns>
     /// A task that represents the asynchronous operation.
-    /// The task result contains the unique identifier of the saved or updated cube.
+    /// The task result contains the unique identifier of the created cylinder.
     /// </returns>
-    /// <exception cref="ArgumentNullException">Thrown when cube is null.</exception>
-    public async Task<Guid> Insert(Cube cube)
+    /// <exception cref="ArgumentNullException">Thrown when cylinder is null.</exception>
+    public async Task<Guid> Insert(Cylinder cylinder)
     {
-        if (cube == null)
+        if (cylinder == null)
         {
-            throw new ArgumentNullException(nameof(cube));
+            throw new ArgumentNullException(nameof(cylinder));
         }
 
-        var existingCube = await _context.Cubes
-            .FirstOrDefaultAsync(c => c.Id == cube.Id);
+        var existingCylinder = await _context.Cylinders
+            .FirstOrDefaultAsync(c => c.Id == cylinder.Id);
 
-        if (existingCube != null)
-        {
-            // Update existing entity
-            existingCube.SideLength = cube.SideLength;
-            _context.Cubes.Update(existingCube);
-        }
-        else
+        if (existingCylinder == null)
         {
             // Insert new entity
-            var cubeDBO = CubeMapper.ToDBO(cube);
-            await _context.Cubes.AddAsync(cubeDBO);
-        }
+            var cylinderDBO = CylinderMapper.ToDBO(cylinder);
+            await _context.Cylinders.AddAsync(cylinderDBO);
+        } 
+        else
+        {
+            throw new Exception("Cylinder already exists. Please update this entity instead.");
+        };
 
         await _context.SaveChangesAsync();
 
-        return cube.Id;
+        return cylinder.Id;
+    }
+
+    /// <summary>
+    /// Updates an existing Cylinder entity in the repository.
+    /// </summary>
+    /// <param name="cylinder">The Cylinder entity to update.</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// The task result contains true or false depending on if the update operation was successful.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Thrown when cylinder is null.</exception>
+    public async Task<bool> Update(Cylinder cylinder)
+    {
+        if (cylinder == null)
+        {
+            throw new ArgumentNullException(nameof(cylinder));
+        }
+
+        var existingCylinder = await _context.Cylinders
+            .FirstOrDefaultAsync(c => c.Id == cylinder.Id);
+
+        if (existingCylinder != null)
+        {
+            // Update existing entity
+            existingCylinder.Radius = cylinder.Radius;
+            existingCylinder.Height = cylinder.Height;
+            _context.Cylinders.Update(existingCylinder);
+            await _context.SaveChangesAsync();
+            return true;
+        } 
+        return false;
+    }
+
+     /// <summary>
+    /// Deletes an existing Cylinder entity in the repository.
+    /// </summary>
+    /// <param name="id">The unique identifier of the Cylinder to delete.</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// The task result contains true or false depending on if the delete operation was successful.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Thrown when cylinder is null.</exception>
+    
+    public async Task<bool> Delete(Guid id)
+    {
+
+        var existingCylinder = await _context.Cylinders
+            .FirstOrDefaultAsync(c => c.Id == id);
+
+        if (existingCylinder != null)
+        {
+            // Delete existing entity
+            _context.Cylinders.Remove(existingCylinder);
+            await _context.SaveChangesAsync();
+            return true;
+        } 
+        return false;
     }
 }

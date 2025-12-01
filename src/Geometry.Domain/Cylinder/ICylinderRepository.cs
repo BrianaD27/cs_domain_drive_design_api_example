@@ -32,5 +32,5 @@ public interface ICylinderRepository
     /// </summary>
     /// <param name="cylinder">The Cylinder entity to create.</param>
     /// <returns>True or false depending on if the cylinder was deleted.</returns>
-    Task<bool> Delete(Cylinder cylinder);
+    Task<bool> Delete(Guid id);
 }
