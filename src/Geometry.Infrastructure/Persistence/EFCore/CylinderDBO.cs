@@ -1,4 +1,4 @@
-namespace Geometry.Infrastructure.Persistence.EFCore.CylinderDBO;
+namespace Geometry.Infrastructure.Persistence.EFCore;
 
 /// <summary>
 /// Database object representation of a Cylinder entity for Entity Framework Core persistence.

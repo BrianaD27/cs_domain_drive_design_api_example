@@ -1,6 +1,6 @@
 using Geometry.Domain.CylinderModel;
 
-namespace Geometry.Infrastructure.Persistence.EFCore.CylinderDBO;
+namespace Geometry.Infrastructure.Persistence.EFCore;
 
 /// <summary>
 /// Mapper class for converting between Cylinder domain entities and CylinderDBO database objects.
