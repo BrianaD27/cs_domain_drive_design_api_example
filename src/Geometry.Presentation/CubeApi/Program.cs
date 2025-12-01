@@ -1,8 +1,8 @@
 using Geometry.Application;
 using Geometry.Domain.CubeModel;
+using Geometry.Domain.CylinderInterface;
 using Geometry.Infrastructure.Persistence.EFCore;
 using Microsoft.EntityFrameworkCore;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -42,11 +42,13 @@ else
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 }
 
-// Register repository implementation
+// Register repository implementations
 builder.Services.AddScoped<ICubeRepository, CubeRepository>();
+builder.Services.AddScoped<ICylinderRepository, CylinderRepository>();
 
 // Register application services
 builder.Services.AddScoped<CubeService>();
+builder.Services.AddScoped<CylinderService>();
 
 var app = builder.Build();
 

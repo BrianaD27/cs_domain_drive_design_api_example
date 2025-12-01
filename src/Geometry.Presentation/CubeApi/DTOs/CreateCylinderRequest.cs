@@ -1,7 +1,7 @@
 namespace Geometry.Presentation.CubeApi.DTOs;
 
 /// <summary>
-/// Data Transfer Object for creating a new cube.
+/// Data Transfer Object for creating a new cylinder.
 /// Represents the request payload for the POST /cube endpoint.
 /// </summary>
 public class CreateCylinderRequest
