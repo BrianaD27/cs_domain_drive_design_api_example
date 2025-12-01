@@ -117,4 +117,79 @@ public class CylinderController : ControllerBase
             return StatusCode(500, "An error occurred while retrieving the Cylinder.");
         }
     }
+
+    [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> UpdateCylinder(Guid id, [FromBody] UpdateCylinderRequest request)
+    {
+        if (request == null)
+        {
+            _logger.LogWarning("UpdateCylinder called with null request");
+            return BadRequest("Request body cannot be null.");
+        }
+
+        if (request.Radius <= 0)
+        {
+            _logger.LogWarning("UpdateCylinder called with invalid radius: {Radius}", request.Radius);
+            return BadRequest("Radius must be greater than 0.");
+        }
+
+        if (request.Height <= 0)
+        {
+            _logger.LogWarning("UpdateCylinder called with invalid height: {Height}", request.Height);
+            return BadRequest("Height must be greater than 0.");
+        }
+
+        try
+        {
+            var cylinder = CylinderDtoMapper.ToDomain(id, request);
+            var success = await _cylinderService.Update(cylinder);
+
+            if (!success)
+            {
+                _logger.LogWarning("Cylinder with Id {CylinderId} not found for update", id);
+                return NotFound($"Cylinder with Id {id} was not found.");
+            }
+
+            _logger.LogInformation("Cylinder updated successfully with Id: {CylinderId}", id);
+            return NoContent();
+        }
+        catch (ArgumentException ex)
+        {
+            _logger.LogError(ex, "ArgumentException occurred while updating cylinder");
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error occurred while updating cylinder with Id: {CylinderId}", id);
+            return StatusCode(500, "An error occurred while updating the cylinder.");
+        }
+    }
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteCylinder(Guid id)
+    {
+        try
+        {
+            var success = await _cylinderService.Delete(id);
+
+            if (!success)
+            {
+                _logger.LogWarning("Cylinder with Id {CylinderId} not found for deletion", id);
+                return NotFound($"Cylinder with Id {id} was not found.");
+            }
+
+            _logger.LogInformation("Cylinder deleted successfully with Id: {CylinderId}", id);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error occurred while deleting cylinder with Id: {CylinderId}", id);
+            return StatusCode(500, "An error occurred while deleting the cylinder.");
+        }
+    }
 }

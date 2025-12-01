@@ -82,10 +82,10 @@ public class CylinderRepository : ICylinderRepository
     /// The task result contains true or false depending on if the update operation was successful.
     /// </returns>
     /// <exception cref="ArgumentNullException">Thrown when cylinder is null.</exception>
-    public async Task<bool> Update(Guid id)
+    public async Task<bool> Update(Cylinder cylinder)
     {
         var existingCylinder = await _context.Cylinders
-            .FirstOrDefaultAsync(c => c.Id == id);
+            .FirstOrDefaultAsync(c => c.Id == cylinder.Id);
 
         if (existingCylinder != null)
         {

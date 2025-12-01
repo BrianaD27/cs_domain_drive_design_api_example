@@ -23,9 +23,9 @@ public interface ICylinderRepository
     /// <summary>
     /// Updates a Cylinder entity in the repository.
     /// </summary>
-    /// <param name="cylinder">The Cylinder entity to create.</param>
+    /// <param name="cylinder">The Cylinder entity to update.</param>
     /// <returns>True or false depending on if the cylinder was updated.</returns>
-    Task<bool> Update(Guid id);
+    Task<bool> Update(Cylinder cylinder);
 
     /// <summary>
     /// Deletes a Cylinder entity in the repository.
