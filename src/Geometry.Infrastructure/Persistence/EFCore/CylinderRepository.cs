@@ -90,15 +90,14 @@ public class CylinderRepository : ICylinderRepository
         if (existingCylinder != null)
         {
             // Update existing entity
-            existingCylinder.Radius = existingCylinder.Radius;
-            existingCylinder.Height = existingCylinder.Height;
+            existingCylinder.Radius = cylinder.Radius;
+            existingCylinder.Height = cylinder.Height;
             _context.Cylinders.Update(existingCylinder);
             await _context.SaveChangesAsync();
             return true;
         } 
 
         return false;
-        throw new ArgumentNullException(nameof(existingCylinder));
     }
 
      /// <summary>
