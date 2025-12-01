@@ -82,26 +82,23 @@ public class CylinderRepository : ICylinderRepository
     /// The task result contains true or false depending on if the update operation was successful.
     /// </returns>
     /// <exception cref="ArgumentNullException">Thrown when cylinder is null.</exception>
-    public async Task<bool> Update(Cylinder cylinder)
+    public async Task<bool> Update(Guid id)
     {
-        if (cylinder == null)
-        {
-            throw new ArgumentNullException(nameof(cylinder));
-        }
-
         var existingCylinder = await _context.Cylinders
-            .FirstOrDefaultAsync(c => c.Id == cylinder.Id);
+            .FirstOrDefaultAsync(c => c.Id == id);
 
         if (existingCylinder != null)
         {
             // Update existing entity
-            existingCylinder.Radius = cylinder.Radius;
-            existingCylinder.Height = cylinder.Height;
+            existingCylinder.Radius = existingCylinder.Radius;
+            existingCylinder.Height = existingCylinder.Height;
             _context.Cylinders.Update(existingCylinder);
             await _context.SaveChangesAsync();
             return true;
         } 
+
         return false;
+        throw new ArgumentNullException(nameof(existingCylinder));
     }
 
      /// <summary>
